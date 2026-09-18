@@ -19,4 +19,6 @@ app.patch('/api/tasks/:id',auth,async(req,res)=>{const t=await Task.findById(req
 app.post('/api/tasks/:id/submission',auth,upload.single('file'),async(req,res)=>{const t=await Task.findById(req.params.id);if(!t||req.user.role==='intern'&&String(t.intern)!==req.user.id)return res.sendStatus(404);t.submission={text:req.body.text,github:req.body.github,fileUrl:req.file?`/uploads/${req.file.filename}`:t.submission?.fileUrl};t.status='Completed';res.json(await t.save())});
 app.delete('/api/tasks/:id',auth,admin,async(req,res)=>{await Task.findByIdAndDelete(req.params.id);res.json({message:'Deleted'})});
 app.get('/api/health',(req,res)=>res.json({ok:true}));
-mongoose.connect(process.env.MONGO_URI).then(()=>app.listen(process.env.PORT||5000,()=>console.log('API running'))).catch(console.error);
+mongoose.connect(process.env.MONGO_URI).catch(console.error);
+
+module.exports = app;
