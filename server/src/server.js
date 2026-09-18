@@ -1,7 +1,7 @@
 require('dotenv').config({ path: require('path').join(__dirname, '../.env') });
 const express=require('express'),mongoose=require('mongoose'),cors=require('cors'),bcrypt=require('bcryptjs'),jwt=require('jsonwebtoken'),multer=require('multer'),path=require('path'),fs=require('fs');
 const app=express(); app.use(cors({origin:process.env.CLIENT_URL||true})); app.use(express.json());
-const uploadDir=path.join(__dirname,'../uploads'); fs.mkdirSync(uploadDir,{recursive:true}); app.use('/uploads',express.static(uploadDir));
+const uploadDir = path.join('/tmp', 'internflow-uploads');
 const upload=multer({dest:uploadDir});
 const User=mongoose.model('User',new mongoose.Schema({name:String,email:{type:String,unique:true},password:String,role:{type:String,enum:['admin','intern'],default:'intern'}},{timestamps:true}));
 const Task=mongoose.model('Task',new mongoose.Schema({title:String,description:String,deadline:Date,status:{type:String,enum:['Pending','In Progress','Completed'],default:'Pending'},intern:{type:mongoose.Schema.Types.ObjectId,ref:'User'},submission:{text:String,github:String,fileUrl:String},feedback:String},{timestamps:true}));
